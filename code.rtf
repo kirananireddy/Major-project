@@ -1,0 +1,338 @@
+{\rtf1\fbidis\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset1 Segoe UI Symbol;}{\f2\fnil Calibri;}{\f3\fnil\fcharset1 Segoe UI Emoji;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.22621}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 import streamlit as st\par
+import pdfplumber\par
+from sklearn.feature_extraction.text import CountVectorizer\par
+from sklearn.metrics.pairwise import cosine_similarity\par
+import re\par
+import requests\par
+from bs4 import BeautifulSoup\par
+from datetime import datetime, timedelta\par
+import matplotlib.pyplot as plt\par
+import io\par
+import sys\par
+import base64\par
+import spacy\par
+import phonenumbers\par
+import pandas as pd\par
+import time\par
+from collections import Counter\par
+import matplotlib.pyplot as plt\par
+import seaborn as sns\par
+import random\par
+import string\par
+from streamlit import components\par
+from pdfminer.high_level import extract_text\par
+from pdf2image import convert_from_path\par
+from PIL import Image\par
+import pytesseract\par
+import enchant\par
+import mimetypes\par
+import language_tool_python\par
+from textblob import TextBlob\par
+from PyPDF2 import PdfReader\par
+import docx2txt\par
+from zipfile import BadZipFile\par
+import PyPDF2\par
+from docx import Document\par
+from email.mime.text import MIMEText\par
+import smtplib\par
+from cryptography.fernet import Fernet\par
+import language_tool_python\par
+from dateutil import parser\par
+from dateutil.parser import ParserError\par
+from twilio.rest import Client\par
+import speech_recognition as sr\par
+from spellchecker import SpellChecker\par
+from nltk import pos_tag, word_tokenize\par
+from langcodes import Language\par
+import langid\par
+import sounddevice as sd\par
+from pydub import AudioSegment\par
+from linkedin_jobs_scraper import LinkedinScraper\par
+from linkedin_jobs_scraper.events import Events, EventData\par
+from linkedin_jobs_scraper.query import Query, QueryOptions, QueryFilters\par
+from linkedin_jobs_scraper.filters import RelevanceFilters, TimeFilters, TypeFilters, ExperienceLevelFilters\par
+import requests, pickle\par
+from bs4 import BeautifulSoup\par
+import re\par
+from webdriver_manager.chrome import ChromeDriverManager\par
+from googlesearch import search\par
+from jinja2 import Template\par
+import base64\par
+import json\par
+from email.mime.text import MIMEText\par
+from email.mime.multipart import MIMEMultipart\par
+from urllib.request import urlopen as uReq\par
+from bs4 import BeautifulSoup as soup\par
+import traceback\par
+from requests_html import HTMLSession\par
+\par
+\par
+\par
+st.set_page_config(layout="wide", initial_sidebar_state="collapsed", page_title="Resume Parser", page_icon="\f1\u-10179?\u-8576?\f0 ")\par
+# Define functions for each page\par
+# Initialize ATS score\par
+\par
+\par
+# Global variable to store ATS scores for each resume\par
+ats_scores = [0.0]\par
+\par
+# Function to calculate ATS score\par
+def calculate_ats_score(matched=True):\par
+    score_increment = 0.1 if matched else 0.0\par
+    ats_scores[-1] += score_increment\par
+\par
+def home_page():\par
+    \par
+\par
+    watermark_html = """\par
+        <style>\par
+            @keyframes moveWatermark \{\par
+                0% \{\par
+                    transform: translate(-100vw, -50%) rotate(-30deg);\par
+                \}\par
+                25% \{\par
+                    transform: translate(calc(100vw - 50%), -50%) rotate(-30deg);\par
+                \}\par
+                50% \{\par
+                    transform: translate(50%, -50%) rotate(-30deg);\par
+                \}\par
+                75% \{\par
+                    transform: translate(50%, 100vh) rotate(-30deg);\par
+                \}\par
+                100% \{\par
+                    transform: translate(-100vw, 50%) rotate(-30deg);\par
+                \}\par
+            \}\par
+\par
+            .watermark \{\par
+                position: fixed;\par
+                top: 50%;\par
+                left: 50%;\par
+                font-size: 104px;\par
+                color: rgba(0, 0, 0, 0.2);\par
+                pointer-events: none;\par
+                z-index: 9999;\par
+                animation: moveWatermark 20s infinite linear;\par
+            \}\par
+        </style>\par
+        <div class="watermark">Anurag University</div>\par
+    """\par
+\par
+\par
+    # Render the watermark HTML\par
+    st.markdown(watermark_html, unsafe_allow_html=True)\par
+    hide_st_style = """\par
+                <style>\par
+                #MainMenu \{visibility: hidden;\}\par
+                header \{visibility: hidden;\}\par
+                </style>\par
+                """\par
+    st.markdown(hide_st_style, unsafe_allow_html=True)\par
+    # Define the generate_captcha function\par
+    image_url = "{{\field{\*\fldinst{HYPERLINK https://d3kqdc25i4tl0t.cloudfront.net/articles/content/57aca545fa80af785f1df9127cf971fe_HeroWhatisanATS.jpg }}{\fldrslt{https://d3kqdc25i4tl0t.cloudfront.net/articles/content/57aca545fa80af785f1df9127cf971fe_HeroWhatisanATS.jpg\ul0\cf0}}}}\f0\fs22 "  # Replace with the actual URL\par
+    centered_image = f'<div style="display: flex; justify-content: center;"><img src="\{image_url\}" width="450"></div>'\par
+    # Display the centered image\par
+    st.markdown(centered_image, unsafe_allow_html=True)\par
+\par
+    # Add a fixed black-colored footer with white text at the bottom of the page\par
+    st.markdown(\par
+        """\par
+        <style>\par
+            body \{\par
+                margin: 0;\par
+                padding: 0;\par
+            \}\par
+\par
+            footer \{\par
+                position: fixed;\par
+                bottom: 0;\par
+                left: 0;\par
+                width: 100%;\par
+                background-color: black;\par
+                padding: 10px;\par
+                color: white;\par
+                text-align: center;\par
+            \}\par
+        </style>\par
+        """,\par
+        unsafe_allow_html=True,\par
+    )\par
+\par
+    # Display the fixed footer content\par
+    st.markdown(\par
+        """\par
+        <footer> ~ Made by Anireddy Saikiran Reddy</footer>\par
+        """,\par
+        unsafe_allow_html=True,\par
+    )\par
+\par
+    st.markdown(\par
+        """\par
+        <style>\par
+            .custom-container \{\par
+                max-width: 800px;\par
+                margin: auto;\par
+                padding: 20px;\par
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\par
+                border-radius: 10px;\par
+            \}\par
+            .custom-header \{\par
+                background-color: #68C1D4;\par
+                padding: 20px;\par
+                border-radius: 10px 10px 0 0;\par
+            \}\par
+            .custom-title \{\par
+                text-align: center;\par
+                color: white;\par
+                font-size: 36px;\par
+                margin: 0;\par
+            \}\par
+        </style>\par
+        <div class='custom-container'>\par
+            <div class='custom-header'>\par
+                <h1 class='custom-title'> \f1\u-10180?\u-8417?\f2  \f0 NexGen Resume Parser</h1>\par
+            </div>\par
+        </div>\par
+        """,\par
+        unsafe_allow_html=True\par
+    )\par
+    st.subheader("\f1\u-10179?\u-8995?\f2  \f0 Description:")\par
+    st.markdown("**NexGen Resume Parser**: A cutting-edge, free tool that serves as your resume's personal guide, scanning for missing skills and keywords to align seamlessly with job descriptions, ensuring your application stands out effortlessly.")\par
+\par
+    with st.expander("\f3\u9881?\u-497?\f2  \f0 Click For How It Works . . . ."):\par
+        st.info("\f3\u9881?\u-497?\f2  \f0 How It Works\\n\\n"\par
+                "**1. Upload Resume:**\\n\\n"\par
+                "Begin by uploading your resume.\\n\\n Enter the job description or link of the role you're eyeing into our platform.\\n\\n"\par
+                "**2. Instant Results:**\\n\\n"\par
+                "Receive instant, comprehensive feedback.\\n\\n Delve into your Job Title Match percentage, Keyword Analysis, and discover common resume elements.\\n\\n"\par
+                "**3. In-Depth Exploration:**\\n\\n"\par
+                "Access Explore More Jobs feature, unveiling opportunities on 10 related websites tailored to your role.\\n\\n"\par
+                "**4. Gain insights with personalized Resume and ATS reports.**\\n\\n"\par
+                "Gain insights with personalized Resume and ATS reports.\\n\\n Understand your strengths and areas for improvement to refine your application.\\n\\n"\par
+                "**5. Resume Refinement:**\\n\\n"\par
+                "Leverage our platform to build and enhance your resume.\\n\\nSeamlessly organize your job hunt using a private career board for efficient application tracking.\\n\\n")      \par
+\par
+\par
+    # Replace 'path_to_your_image_file' with the actual file path on your system\par
+    background_image_url = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJf2AoULiU9dTR4llXnQGQMusvVDoY6zRWTg&usqp=CAU'\par
+\par
+    st.markdown(f"""\par
+        <style>\par
+            .upload-button \{\{\par
+                width: 60px;\par
+                height: 60px;\par
+                background-color: lightgreen;\par
+                border: none;\par
+                border-radius: 50%;\par
+                color: white;\par
+                display: flex;\par
+                justify-content: center;\par
+                align-items: center;\par
+                background-image: url('\{background_image_url\}');\par
+                background-size: cover;\par
+            \}\}\par
+        </style>\par
+    """, unsafe_allow_html=True)\par
+\par
+    st.markdown("<h2 style='font-weight: bold;'>\f1\u-10180?\u-8273?\f2  \f0 Job Matching and Recent Job Links</h2>", unsafe_allow_html=True)\par
+\par
+    # Apply CSS styling to make the text blink\par
+    style = """\par
+    <style>\par
+    .blink \{\par
+        animation: blinker 1s linear infinite;\par
+    \}\par
+    @keyframes blinker \{\par
+        50% \{\par
+            opacity: 0;\par
+        \}\par
+    \}\par
+    </style>\par
+    """\par
+\par
+    # Display the blinking and styled text\par
+    st.markdown(style, unsafe_allow_html=True)\par
+    st.markdown("<p class='blink' style='font-size: 24px; background-color: #FFFF00;'>Upload resume (DOCX only)</p>", unsafe_allow_html=True)\par
+    \par
+    # Streamlit code\par
+    # Initialize global variable\par
+    resume_texts = []\par
+\par
+    # Custom CSS for positioning and animation\par
+    st.markdown("""\par
+        <style>\par
+            .upload-container \{\par
+                position: fixed;\par
+                top: 10px;\par
+                left: 10px;\par
+                z-index: 999;\par
+                animation: rotate 2s linear infinite;\par
+            \}\par
+            \par
+            .upload-button \{\par
+                width: 60px;\par
+                height: 60px;\par
+                font-size: 24px;\par
+                background-color: lightgreen;\par
+                border: none;\par
+                border-radius: 50%;\par
+                color: white;\par
+                display: flex;\par
+                justify-content: center;\par
+                align-items: center;\par
+            \}\par
+\par
+            @keyframes rotate \{\par
+                100% \{\par
+                    transform: rotate(360deg);\par
+                \}\par
+            \}\par
+        </style>\par
+    """, unsafe_allow_html=True)\par
+\par
+    # Upload button\par
+    upload_button_clicked = st.markdown('<div class="upload-container"><button class="upload-button"></button></div>', unsafe_allow_html=True)\par
+\par
+    # Only show uploaded files and process button if upload button is clicked\par
+    if upload_button_clicked:\par
+        # Allow users to upload multiple DOCX files\par
+        uploaded_resumes = st.file_uploader("Choose DOCX files", type=["docx"], accept_multiple_files=True)\par
+\par
+        # Process button\par
+        click = st.button("Process")\par
+\par
+    # Update resume_texts when the "Process" button is clicked\par
+    if click and uploaded_resumes:\par
+        for uploaded_resume in uploaded_resumes:\par
+            file_type = uploaded_resume.type\par
+\par
+            if file_type == "application/pdf":\par
+                with pdfplumber.open(uploaded_resume) as pdf:\par
+                    pages = pdf.pages\par
+                    resume_text = " ".join([page.extract_text() for page in pages])\par
+                    resume_texts.append(resume_text)\par
+            elif file_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":\par
+                doc = Document(uploaded_resume)\par
+                paragraphs = [paragraph.text for paragraph in doc.paragraphs]\par
+                resume_text = " ".join(paragraphs)\par
+                resume_texts.append(resume_text)\par
+\par
+    \par
+    \par
+    # Function to match job description with resume\par
+    def match_resume(job_description, resume):\par
+        # Your matching logic goes here (use spaCy, NLTK, or other libraries for advanced matching)\par
+        # For simplicity, let's use a basic keyword matching approach\par
+        job_keywords = set(job_description.lower().split())\par
+        resume_keywords = set(resume.lower().split())\par
+        matching_score = len(job_keywords.intersection(resume_keywords)) / len(job_keywords)\par
+        return matching_score * 100\par
+\par
+    def calculate_ats_score(matched):\par
+        # Your logic for calculating ATS score goes here\par
+        pass\par
+}
+ 
